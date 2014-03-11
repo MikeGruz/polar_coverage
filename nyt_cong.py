@@ -4,7 +4,7 @@ Scrape NYTimes API for members of Congress from 102-on
 goes back to 98th)
 """
 
-import nyt, time
+import nyt, time, sys
 
 def bioscrape(sessions, chamber, newdict=True, olddict=None):
 
@@ -14,6 +14,10 @@ def bioscrape(sessions, chamber, newdict=True, olddict=None):
     else:
         cong_dict = olddict
 
+    "check that sessions is a list"
+    if not type(sessions) is list:
+        print("Sessions must be list")
+        sys.exit()
     
     "loop over sessions"
     for session in sessions:
