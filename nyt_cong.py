@@ -4,7 +4,7 @@ Scrape NYTimes API for members of Congress from 102-on
 goes back to 98th)
 """
 
-import nyt, time, sys
+import nyt, time, sys, urllib2
 
 def bioscrape(sessions, chamber, newdict=True, olddict=None):
 
@@ -58,13 +58,64 @@ def bioscrape(sessions, chamber, newdict=True, olddict=None):
     return(cong_dict)
 
 
-def artscrape(terms):
+def artscrape(congdict):
     """
     scrape bi-yearly Times article counts for MoCs
     serves as wrapper for nyt.search()
 
     only gets counts, doesn't get individual article info
     """
+
+    "instantiate new dictionary"
+    newdict = congdict.copy()
+
+    "bring in term-date dict"
+    d = congdates()
+
+    for i in newdict:
+
+        "check that term indicators exist"
+        if newdict[i].has_key('terms'):
+
+            "create internal dict for article counts"
+            newdict[i]['art_counts'] = {}
+
+            "encode full name"
+            fullname = newdict[i]['first'] + ' ' + newdict[i]['last']
+            fullname = urllib2.quote(fullname).decode('utf-8')
+
+            "pull full name from MoC"
+            fullname = "%22" + fullname + "%22%7E1"
+
+            "print status to screen"
+            print "Retrieving articles for", i
+
+            "loop over terms"
+            for j in newdict[i]['terms']:
+
+                "construct search query"
+                
+                "begin/end dates"
+                bdate = d[j]['begin']
+                edate = d[j]['end']
+
+                searchterms = fullname + "&begin_date=" + bdate + "&end_date=" + edate
+
+                "hit NYT article search API"
+                try:
+                    resp = nyt.search(searchterms)['response']['meta']['hits']
+                    newdict[i]['art_counts'][j] = resp                    
+                except:
+                    newdict[i]['art_counts'][j] = -99
+                    continue
+
+                "wait"
+                time.sleep(0.3)
+
+            newdict[i]['artcount_status'] = True
+
+    return(newdict)
+
 
 
 def addterms(congdict, termdict):
