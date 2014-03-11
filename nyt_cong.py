@@ -51,6 +51,7 @@ def bioscrape(sessions, chamber, newdict=True, olddict=None):
                     time.sleep(0.5)
 
     except:
+        print("Exception, exiting")
         return(cong_dict)
 
     return(cong_dict)
