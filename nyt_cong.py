@@ -14,45 +14,42 @@ def bioscrape(sessions, chamber, newdict=True, olddict=None):
     else:
         cong_dict = olddict
 
-    try:
     
-        "loop over sessions"
-        for session in sessions:
+    "loop over sessions"
+    for session in sessions:
 
-            "pull chamber membership for that session"
-            session = str(session)
+        "pull chamber membership for that session"
+        session = str(session)
 
-            print "Pulling data for Congress #" + session
+        print "Pulling data for Congress #" + session
 
-            membs = nyt.cong_membership(session, chamber)
+        membs = nyt.cong_membership(session, chamber)
 
-            time.sleep(1)
+        "wait for a sec"
+        time.sleep(1)
 
-            "loop over individual members, check if already in dict"
-            for mem in membs['results'][0]['members']:
+        "loop over individual members, check if already in dict"
+        for mem in membs['results'][0]['members']:
 
-                if not cong_dict.has_key(mem['id']):
+            if not cong_dict.has_key(mem['id']):
 
-                    "pull individual bio"
-                    bio = nyt.cong_meminfo(mem['id'])['results'][0]
+                "pull individual bio"
+                bio = nyt.cong_meminfo(mem['id'])['results'][0]
 
-                    cong_dict[mem['id']] = {'first': mem['first_name'],
-                                           'middle': mem['middle_name'],
-                                           'last': mem['last_name'],
-                                           'party': mem['party'],
-                                           'state': mem['state'],
-                                           'icpsr_id': bio['icpsr_id'],
-                                           'govtrack_id': bio['govtrack_id'],
-                                           'nyt_id': bio['member_id'],
-                                           'thomas_id': bio['thomas_id'],
-                                           'gender': bio['gender'],
-                                           'roles': bio['roles']}
+                cong_dict[mem['id']] = {'first': mem['first_name'],
+                                       'middle': mem['middle_name'],
+                                       'last': mem['last_name'],
+                                       'party': mem['party'],
+                                       'state': mem['state'],
+                                       'icpsr_id': bio['icpsr_id'],
+                                       'govtrack_id': bio['govtrack_id'],
+                                       'nyt_id': bio['member_id'],
+                                       'thomas_id': bio['thomas_id'],
+                                       'gender': bio['gender'],
+                                       'roles': bio['roles']}
 
-                    time.sleep(0.5)
-
-    except:
-        print("Exception, exiting")
-        return(cong_dict)
+                "avoid rate limiting"
+                time.sleep(0.5)
 
     return(cong_dict)
 
