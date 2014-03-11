@@ -58,6 +58,34 @@ def bioscrape(sessions, chamber, newdict=True, olddict=None):
     return(cong_dict)
 
 
+def artscrape(terms):
+    """
+    scrape bi-yearly Times article counts for MoCs
+    serves as wrapper for nyt.search()
+
+    only gets counts, doesn't get individual article info
+    """
+
+
+def addterms(congdict, termdict):
+    "add terms of service to MoCs' dict entries"
+
+    newdict = congdict.copy()
+
+    "loop over congressional bio dict, add terms"
+    for i in newdict:
+        try:
+            newdict[i]['terms'] = termdict[newdict[i]['icpsr_id']]
+        except:
+            continue
+            
+    return(newdict)
+
+
+
+
+
+
 def dw_import(dwfile):
     "pulls dw-nominate data into a dict to insert sessions"
 
