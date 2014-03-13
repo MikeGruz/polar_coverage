@@ -82,7 +82,7 @@ def artscrape(congdict):
 
             "encode full name"
             fullname = newdict[i]['first'] + ' ' + newdict[i]['last']
-            fullname = urllib2.quote(fullname).decode('utf-8')
+            fullname = urllib2.quote(fullname.encode('utf-8'))
 
             "pull full name from MoC"
             fullname = "%22" + fullname + "%22%7E1"
