@@ -4,7 +4,7 @@ Scrape NYTimes API for members of Congress from 102-on
 goes back to 98th)
 """
 
-import nyt, time, sys, urllib2
+import nyt, time, sys, urllib2, csv
 
 def bioscrape(sessions, chamber, newdict=True, olddict=None):
 
@@ -182,8 +182,66 @@ def congdates():
     return(cdates)
 
 
+def dicttolist(congdict):
+    "convert dictionary to python list"
+
+    # create list
+    conglist = []
+
+    for i in congdict:
+
+        # check if article counts exist
+        if congdict[i].has_key('art_counts'):
+
+            pers = congdict[i]
+            icpsr_id = pers['icpsr_id']
+            gender = pers['gender']
+
+            for j in pers['art_counts']:
+                conglist.append([icpsr_id,gender,j,pers['art_counts'][j]])
+
+    return(conglist)
+
+def dicttocsv(congdict, userfile):
+    "write tabular version of congress dictionary to csv file"
+
+    csvfile = open(userfile, 'wb')
+
+    wr = csv.writer(csvfile)
+    
+    # write header row to file
+    wr.writerow(['idno','gender','cong','art_count'])
+
+    # loop through members of congress
+    for i in congdict:
+
+        # check if article counts exist
+        if congdict[i].has_key('art_counts'):
+
+            pers = congdict[i]
+            icpsr_id = pers['icpsr_id']
+            gender = pers['gender']
+
+            for j in pers['art_counts']:
+
+                # write each row to csv file
+                wr.writerow([icpsr_id, gender, j, pers['art_counts'][j]])
+
+    # close file
+    csvfile.close()
 
 
+
+
+
+"""
+getting list to dict
+
+import csv
+csvfile = open(..., 'wb')
+wr = csv.writer(csvfile)
+wr.writerow(mylist)
+"""
 
 
 
