@@ -11,7 +11,7 @@ def articles(first, last):
     "get articles based on MoC's name"
 
     base = 'http://monroeapi.com/'
-    uid = 'E84890C4458AC893E4E67BD5E16DF2D1'
+    
 
     url = base + "articles?first_name=" + first + \
             "&last_name=" + last + "&api_key=" + uid
